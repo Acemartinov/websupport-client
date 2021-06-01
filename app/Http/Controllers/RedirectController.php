@@ -14,8 +14,13 @@ class RedirectController extends Controller
         if (getenv('API_KEY') && getenv('API_SECRET')) {
             $response = $this->universalApiClient('', 'GET', '');
             $parsed = json_decode($response);
-            $array = $parsed->items;
-            return view('list', ["response" => $array]);
+            if(isset($parsed->code) == 401) {
+                $error = ['error'=>$parsed->message];
+                return view('list', ["response"=>$error]);
+            } else {
+                $array = $parsed->items;
+                return view('list', ["response" => $array]);
+            }
         } else {
             $error = ['error'=>'Environment variables are not set.'];
             return view('list', ["response" => $error]);

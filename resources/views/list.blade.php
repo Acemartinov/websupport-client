@@ -65,6 +65,9 @@
     @unless(getenv('API_KEY') && getenv('API_SECRET'))
         <p class="text-danger"> An error has occured. </p>
         <p> Please check if you have added the <code>API_KEY</code> and <code>API_SECRET</code> variables in the <code>.env</code> file. </p>
+    @elseif (isset($response["error"]))
+        <p class="text-danger"> An error has occured. </p>
+        <p> {{$response["error"]}}</p>
     @else
         <a href="/add"> Add new record </a>
         <table class="styled-table">
