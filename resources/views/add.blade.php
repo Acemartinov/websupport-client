@@ -40,7 +40,10 @@
 <div>
     <h1> WebSupport API Viewer</h1>
     <h3> Add new record </h3>
-
+    @unless(getenv('API_KEY') && getenv('API_SECRET'))
+        <p class="text-danger"> An error has occured. </p>
+        <p> Please check if you have added the <code>API_KEY</code> and <code>API_SECRET</code> variables in the <code>.env</code> file. </p>
+    @else
     <form method="POST" action="{{ url("/add")}}">
         @csrf
         <label for="type"> Select type of record</label>
@@ -61,6 +64,7 @@
         <button type="submit" class="btn btn-success">Submit </button>
 
     </form>
+    @endif
 {{--    cez js --}}
 
 

@@ -27,20 +27,24 @@
 <div>
     <h1> WebSupport API Viewer</h1>
     <h3> Deleting a record - result </h3>
+    @unless(getenv('API_KEY') && getenv('API_SECRET'))
+        <p class="text-danger"> An error has occured. </p>
+        <p> Please check if you have added the <code>API_KEY</code> and <code>API_SECRET</code> variables in the <code>.env</code> file. </p>
+    @endunless
     @isset($response->message)
         <p class="text-center text-danger">
             An error has occured. <br>
-            {{ $response->message }}
+            Server responds with: <code>{{ $response->message }}</code>
         </p>
         <a class="btn btn-primary" href="/"> Go back </a>
     @endisset
-    @if (isset($response->status))
+    @isset($response->status)
         <p class="text-center text-danger">
             Record deleted successfully. <br>
             Id: {{ $response->item->id }}
         </p>
         <a class="btn btn-primary" href="/"> Go back </a>
-    @endif
+    @endisset
 
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>

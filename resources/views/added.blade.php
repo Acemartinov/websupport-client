@@ -26,21 +26,25 @@
 <div>
     <h1> WebSupport API Viewer</h1>
     <h3> Adding a record - result </h3>
-
-    @if ($response->status == 'error')
-        <p class="text-center text-danger">
-            An error has occured. <br>
-            {{ $response->errors->content[0] }}
-        </p>
-        <a class="btn btn-primary" href="/add"> Go back (Add record) </a>
-        <a class="btn btn-primary" href="/"> Go home </a>
-    @elseif($response->status == 'success')
-        <p class="text-center text-danger">
-            Record added successfully <br>
-            Id: {{ $response->item->id }}
-        </p>
-        <a class="btn btn-primary" href="/"> Go home </a>
-    @endif
+    @unless(getenv('API_KEY') && getenv('API_SECRET'))
+        <p class="text-danger"> An error has occured. </p>
+        <p> Please check if you have added the <code>API_KEY</code> and <code>API_SECRET</code> variables in the <code>.env</code> file. </p>
+    @else
+        @if ($response->status == 'error')
+            <p class="text-center text-danger">
+                An error has occured. <br>
+                {{ $response->errors->content[0] }}
+            </p>
+            <a class="btn btn-primary" href="/add"> Go back (Add record) </a>
+            <a class="btn btn-primary" href="/"> Go home </a>
+        @elseif($response->status == 'success')
+            <p class="text-center text-danger">
+                Record added successfully <br>
+                Id: {{ $response->item->id }}
+            </p>
+            <a class="btn btn-primary" href="/"> Go home </a>
+        @endif
+    @endunless
 
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>

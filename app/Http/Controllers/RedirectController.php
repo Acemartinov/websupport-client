@@ -11,33 +11,42 @@ class RedirectController extends Controller
 {
     public function listAllRedirects(): View
     {
-        $response = $this->universalApiClient('', 'GET', '');
-        $parsed = json_decode(strval($response));
-        $array = $parsed->items;
-        return view('list', ["response" => $array]);
+        if (getenv('API_KEY') && getenv('API_SECRET')) {
+            $response = $this->universalApiClient('', 'GET', '');
+            $parsed = json_decode($response);
+            $array = $parsed->items;
+            return view('list', ["response" => $array]);
+        } else {
+            $error = ['error'=>'Environment variables are not set.'];
+            return view('list', ["response" => $error]);
+        }
     }
 
     public function addNewRecord(Request $request):View
     {
-        $req = $request->all();
-        unset($req['_token']);
+        if (getenv('API_KEY') && getenv('API_SECRET')) {
+            $req = $request->all();
+            unset($req['_token']);
 
-        if (isset($req['ttl'])) {
-            $req['ttl'] = intval($req['ttl']);
-        }
-        if (isset($req['prio'])) {
-            $req['prio'] = intval($req['prio']);
-        }
-        if (isset($req['port'])) {
-            $req['port'] = intval($req['port']);
-        }
-        if (isset($req['weight'])) {
-            $req['weight'] = intval($req['weight']);
-        }
+            if (isset($req['ttl'])) {
+                $req['ttl'] = intval($req['ttl']);
+            }
+            if (isset($req['prio'])) {
+                $req['prio'] = intval($req['prio']);
+            }
+            if (isset($req['port'])) {
+                $req['port'] = intval($req['port']);
+            }
+            if (isset($req['weight'])) {
+                $req['weight'] = intval($req['weight']);
+            }
 
-        $apiReq = $this->universalApiClient('', 'POST', json_encode($req));
-        $apiReq = json_decode($apiReq);
-        return \view('added', ["response" => $apiReq]);
+            $apiReq = $this->universalApiClient('', 'POST', json_encode($req));
+            $apiReq = json_decode($apiReq);
+            return \view('added', ["response" => $apiReq]);
+        }
+        $error = ['error'=>'Environment variables are not set.'];
+        return view('added', ["response" => $error]);
     }
 
     public function showFieldsOfRecord(Request $request): string
@@ -48,9 +57,14 @@ class RedirectController extends Controller
 
     public function deleteRecord($id): View
     {
-        $res = $this->universalApiClient('/' . $id, 'DELETE', '');
-        $res = json_decode($res);
-        return view('deleted', ["response" => $res]);
+        if (getenv('API_KEY') && getenv('API_SECRET')) {
+            $res = $this->universalApiClient('/' . $id, 'DELETE', '');
+            $res = json_decode($res);
+            return view('deleted', ["response" => $res]);
+        }
+        else{
+            return view('deleted');
+        }
     }
 
     private function getValuesForRecord($type): string

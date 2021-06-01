@@ -21,8 +21,7 @@
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            width: 95vw;
-            margin: auto;
+            margin: 2vh 2vw;
         }
         .styled-table {
             border-collapse: collapse;
@@ -63,44 +62,49 @@
 <div>
     <h1> WebSupport API Viewer</h1>
     <h3> Lists all records </h3>
-    <a href="/add"> Add new record </a>
-    <table class="styled-table">
-        <thead>
-        <tr>
-            <th> Type </th>
-            <th> Name </th>
-            <th> Content </th>
-            <th> TTL </th>
-            <th> Prio </th>
-            <th> Port </th>
-            <th> Weight </th>
-            <th> Delete </th>
-        </tr>
-        </thead>
-        @foreach($response as $record)
+    @unless(getenv('API_KEY') && getenv('API_SECRET'))
+        <p class="text-danger"> An error has occured. </p>
+        <p> Please check if you have added the <code>API_KEY</code> and <code>API_SECRET</code> variables in the <code>.env</code> file. </p>
+    @else
+        <a href="/add"> Add new record </a>
+        <table class="styled-table">
+            <thead>
             <tr>
-                <td> {{ $record->type }}</td>
-                <td> {{ $record->name }}</td>
-                <td> {{ $record->content }}</td>
-                <td> {{ $record->ttl }}</td>
-                @switch($record->type)
-                    @case('MX')
-                    <td> {{ $record->prio }} </td>
-                    @break
-                    @case('SRV')
-                    <td> {{ $record->prio }} </td>
-                    <td> {{ $record->port }} </td>
-                    <td> {{ $record->weight }} </td>
-                    @break
-                @endswitch
-                <td colspan="4" style="text-align: right">
-                    <a class="btn btn-danger delete-button" id="{{ $record->id }}" href='/deleted/{{ $record->id }}'>
-                        Delete
-                    </a>
-                </td>
+                <th> Type </th>
+                <th> Name </th>
+                <th> Content </th>
+                <th> TTL </th>
+                <th> Prio </th>
+                <th> Port </th>
+                <th> Weight </th>
+                <th> Delete </th>
             </tr>
-        @endforeach
+            </thead>
+            @foreach($response as $record)
+                <tr>
+                    <td> {{ $record->type ?? 'ERROR'}}</td>
+                    <td> {{ $record->name ?? 'ERROR' }}</td>
+                    <td> {{ $record->content ?? 'ERROR' }}</td>
+                    <td> {{ $record->ttl ?? 'ERROR' }}</td>
+                    @switch($record->type ?? 'ERROR')
+                        @case('MX')
+                        <td> {{ $record->prio ?? 'ERROR' }} </td>
+                        @break
+                        @case('SRV')
+                        <td> {{ $record->prio ?? 'ERROR' }} </td>
+                        <td> {{ $record->port ?? 'ERROR' }} </td>
+                        <td> {{ $record->weight ?? 'ERROR' }} </td>
+                        @break
+                    @endswitch
+                    <td colspan="4" style="text-align: right">
+                        <a class="btn btn-danger delete-button" id="{{ $record->id ?? 'ERROR' }}" href='/deleted/{{ $record->id ?? 'ERROR' }}'>
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
     </table>
+    @endif
 
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
