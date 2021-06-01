@@ -19,3 +19,6 @@ Route::get('/add', function () {
 Route::get('/deleted/{id}', [RedirectController::class, 'deleteRecord']);
 
 Route::post('/add', [RedirectController::class, 'addNewRecord']);
+
+Route::post('/showFormOptions', [RedirectController::class, 'showFieldsOfRecord']);
+
