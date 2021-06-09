@@ -1,6 +1,7 @@
 ## WebSupport API Client
 
-Done as part of an interview process for an internship position at WebSupport.
+Done as part of an interview process for an internship position at WebSupport.  
+A web interface which consumes a REST api, displays data, adds new records and deletes existing records.
 
 ### Secrets
 
